@@ -1,3 +1,0 @@
-[submodule "python-e2e-localstack-tests"]
-	path = python-e2e-localstack-tests
-	url = https://github.com/slawekradzyminski/python-e2e-localstack-tests.git
