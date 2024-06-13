@@ -40,3 +40,4 @@ def test_should_return_422_on_wrong_username(sign_in_api: SignIn):
     except requests.exceptions.HTTPError as e:
         assert e.response.status_code == 422, "Expected status code 422"
         assert "Invalid username/password supplied" == e.response.json()["message"], "Expected error message for wrong username"
+
