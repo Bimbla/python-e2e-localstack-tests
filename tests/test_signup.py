@@ -1,3 +1,4 @@
+import pytest
 import requests
 from api.post_sign_up import SignUp
 from api.delete_user import DeleteUser
