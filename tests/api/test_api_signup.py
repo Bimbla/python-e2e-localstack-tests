@@ -1,7 +1,7 @@
 import pytest
 import os
-from api.post_sign_up import SignUp  # Zaktualizuj import do odpowiedniej ścieżki
-from api.models import RegisterRequestDto  # Zaktualizuj import do odpowiedniej ścieżki
+from api.post_sign_up import SignUp
+from api.data.register import RegisterRequestDto  # Poprawiony import
 from dotenv import load_dotenv
 import requests
 
@@ -12,7 +12,14 @@ def sign_up_api():
     return SignUp()
 
 def test_successful_api_signup(sign_up_api: SignUp):
-    user = RegisterRequestDto(username="newuser", password="validpassword123", email="newuser@example.com")
+    user = RegisterRequestDto(
+        username="newuser",
+        password="validpassword123",
+        email="newuser@example.com",
+        firstName="New",
+        lastName="User",
+        roles=["ROLE_USER"]
+    )
     response = sign_up_api.api_call(user)
     try:
         response.raise_for_status()
@@ -22,7 +29,14 @@ def test_successful_api_signup(sign_up_api: SignUp):
         pytest.fail(f"HTTPError occurred: {str(e)}")
 
 def test_should_return_400_if_username_or_password_too_short(sign_up_api: SignUp):
-    user = RegisterRequestDto(username="us", password="pw", email="short@example.com")
+    user = RegisterRequestDto(
+        username="us",
+        password="pw",
+        email="short@example.com",
+        firstName="Short",
+        lastName="Name",
+        roles=["ROLE_USER"]
+    )
     try:
         sign_up_api.api_call(user)
     except requests.exceptions.HTTPError as e:
@@ -31,7 +45,14 @@ def test_should_return_400_if_username_or_password_too_short(sign_up_api: SignUp
         assert "password length" in e.response.json().get("password", ""), "Password error should mention length"
 
 def test_should_return_422_on_existing_user(sign_up_api: SignUp):
-    user = RegisterRequestDto(username=os.getenv("ADMIN_USERNAME"), password=os.getenv("ADMIN_PASSWORD"), email="existinguser@example.com")
+    user = RegisterRequestDto(
+        username=os.getenv("ADMIN_USERNAME"),
+        password=os.getenv("ADMIN_PASSWORD"),
+        email="existinguser@example.com",
+        firstName="Existing",
+        lastName="User",
+        roles=["ROLE_USER"]
+    )
     try:
         sign_up_api.api_call(user)
     except requests.exceptions.HTTPError as e:
@@ -39,10 +60,16 @@ def test_should_return_422_on_existing_user(sign_up_api: SignUp):
         assert "User already exists" == e.response.json().get("message"), "Expected error message for existing user"
 
 def test_should_return_500_on_server_error(sign_up_api: SignUp):
-    user = RegisterRequestDto(username="newuser", password="validpassword123", email="servererror@example.com")
+    user = RegisterRequestDto(
+        username="newuser",
+        password="validpassword123",
+        email="servererror@example.com",
+        firstName="Server",
+        lastName="Error",
+        roles=["ROLE_USER"]
+    )
     try:
         sign_up_api.api_call(user)
     except requests.exceptions.HTTPError as e:
         assert e.response.status_code == 500, "Expected status code 500"
         pytest.fail(f"Server error occurred: {str(e)}")
-git
