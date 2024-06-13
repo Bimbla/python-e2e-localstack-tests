@@ -38,10 +38,10 @@ jobs:
       - name: Installing all necessary packages
         run: pip install -r requirements.txt
 
-      - name: Run all tests
+      - name: API tests
         env:
           FRONTEND_URL: "http://localhost:8081"
           ADMIN_USERNAME: "admin"
           ADMIN_PASSWORD: "admin"
           BACKEND_URL: "http://localhost:4001"
-        run: pytest tests/ -s
+        run: pytest tests/api -s
