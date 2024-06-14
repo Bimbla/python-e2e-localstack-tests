@@ -60,27 +60,8 @@ def test_should_return_400_if_role_invalid(sign_up_api: SignUp):
         assert e.response.status_code == 400, "Expected status code 400"
         assert "invalid role" in e.response.json()["roles"], "Role error"
 
-# def test_should_return_400_if_first_name_missing(sign_up_api: SignUp):
-#     user = get_random_user()
-#     user.firstName = ""  # intentionally missing first name
-#     try:
-#         response = sign_up_api.api_call(user)
-#         response.raise_for_status()
-#     except requests.exceptions.HTTPError as e:
-#         assert e.response.status_code == 400, "Expected status code 400"
-#         assert "first name" in e.response.json()["firstName"], "First name error"
 
-# def test_should_return_400_if_last_name_missing(sign_up_api: SignUp):
-#     user = get_random_user()
-#     user.lastName = ""  # intentionally missing last name
-#     try:
-#         response = sign_up_api.api_call(user)
-#         response.raise_for_status()
-#     except requests.exceptions.HTTPError as e:
-#         assert e.response.status_code == 400, "Expected status code 400"
-#         assert "last name" in e.response.json()["lastName"], "Last name error"
-
-def test_should_return_400_if_role_invalid_2(sign_up_api: SignUp):
+def test_should_return_400_if_role_invalid(sign_up_api: SignUp):
     user = get_random_user()
     user.roles = ["ROLE_CLIENT"]  # intentionally invalid role
     try:
@@ -90,7 +71,7 @@ def test_should_return_400_if_role_invalid_2(sign_up_api: SignUp):
         assert e.response.status_code == 400, "Expected status code 400"
         assert "Invalid role" in e.response.json()["roles"], "Role error"
 
-def test_should_return_400_if_first_name_missing_2(sign_up_api: SignUp):
+def test_should_return_400_if_first_name_missing(sign_up_api: SignUp):
     user = get_random_user()
     user.firstName = ""  # intentionally missing first name
     try:
@@ -100,7 +81,7 @@ def test_should_return_400_if_first_name_missing_2(sign_up_api: SignUp):
         assert e.response.status_code == 400, "Expected status code 400"
         assert "Minimum firstName length" in e.response.json()["firstName"], "First name error"
 
-def test_should_return_400_if_last_name_missing_2(sign_up_api: SignUp):
+def test_should_return_400_if_last_name_missing(sign_up_api: SignUp):
     user = get_random_user()
     user.lastName = ""  # intentionally missing last name
     try:
@@ -110,3 +91,12 @@ def test_should_return_400_if_last_name_missing_2(sign_up_api: SignUp):
         assert e.response.status_code == 400, "Expected status code 400"
 
 
+def test_should_return_400_if_password_too_short(sign_up_api: SignUp):
+    user = get_random_user()
+    user.password = "123"  # intentionally short password
+    try:
+        response = sign_up_api.api_call(user)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        assert e.response.status_code == 400, "Expected status code 400"
+        assert "Minimum password length: 8 characters" in e.response.json()["password"], "Password error"
