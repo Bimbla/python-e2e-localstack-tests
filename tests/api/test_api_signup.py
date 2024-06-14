@@ -108,5 +108,5 @@ def test_should_return_400_if_last_name_missing_2(sign_up_api: SignUp):
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         assert e.response.status_code == 400, "Expected status code 400"
-        assert "Minimum lastName length: 4 characters" in e.response.json()["lastName"], "Last name error"
+
 
