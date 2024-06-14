@@ -69,7 +69,7 @@ def test_should_return_400_if_role_invalid(sign_up_api: SignUp):
 
 def test_should_return_400_if_role_invalid(sign_up_api: SignUp):
     user = get_random_user()
-    user.roles = ["ROLE_CLIEN"]  # intentionally invalid role
+    user.roles = ["ROLE_CLIE"]  # intentionally invalid role
     try:
         response = sign_up_api.api_call(user)
         response.raise_for_status()
@@ -79,7 +79,7 @@ def test_should_return_400_if_role_invalid(sign_up_api: SignUp):
 
 def test_should_return_400_if_role_invalid_2(sign_up_api: SignUp):
     user = get_random_user()
-    user.roles = ["ROLE_CLIENT"]  # intentionally invalid role
+    user.roles = ["ROLE_CLIEN"]  # intentionally invalid role
     try:
         response = sign_up_api.api_call(user)
         response.raise_for_status()
