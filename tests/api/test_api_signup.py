@@ -45,3 +45,13 @@ def test_should_return_400_if_email_invalid(sign_up_api: SignUp):
         assert (
             "must be a well-formed email address" in e.response.json()["email"]
         ), "Email error should mention being a well-formed email address"
+
+def test_should_return_400_if_username_too_short_2(sign_up_api: SignUp):
+    user = get_random_user()
+    user.username = "abc"  # intentionally short username
+    try:
+        response = sign_up_api.api_call(user)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        assert e.response.status_code == 400, "Expected status code 400"
+        assert "username length" in e.response.json()["username"], "Username error"
