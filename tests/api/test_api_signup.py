@@ -1,7 +1,13 @@
+import logging
+
 import pytest
 import requests
 from api.post_sign_up import SignUp
 from generators.user_generator import get_random_user
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 @pytest.fixture
 def sign_up_api():
@@ -98,5 +104,16 @@ def test_should_return_400_if_password_too_short(sign_up_api: SignUp):
         response = sign_up_api.api_call(user)
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
+        assert e.response.status_code == 400, "Expected status code 400"
+        assert "Minimum password length: 8 characters" in e.response.json()["password"], "Password error"
+
+def test_should_return_400_if_password_too_short_2(sign_up_api: SignUp):
+    user = get_random_user()
+    user.password = "123"  # intentionally short password
+    try:
+        response = sign_up_api.api_call(user)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"Response JSON: {e.response.json()}")
         assert e.response.status_code == 400, "Expected status code 400"
         assert "Minimum password length: 8 characters" in e.response.json()["password"], "Password error"
