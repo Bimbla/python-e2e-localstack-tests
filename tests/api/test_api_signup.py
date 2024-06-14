@@ -48,6 +48,7 @@ def test_should_return_400_if_username_too_short(sign_up_api: SignUp):
     except requests.exceptions.HTTPError as e:
         assert e.response.status_code == 400, "Expected status code 400"
         assert "username length" in e.response.json()["username"], "Username error"
+        assert "Minimum username length: 4 characters" in e.response.json()["username"], "Username error"
 
 def test_should_return_400_if_role_invalid(sign_up_api: SignUp):
     user = get_random_user()
@@ -59,25 +60,25 @@ def test_should_return_400_if_role_invalid(sign_up_api: SignUp):
         assert e.response.status_code == 400, "Expected status code 400"
         assert "invalid role" in e.response.json()["roles"], "Role error"
 
-def test_should_return_400_if_first_name_missing(sign_up_api: SignUp):
-    user = get_random_user()
-    user.firstName = ""  # intentionally missing first name
-    try:
-        response = sign_up_api.api_call(user)
-        response.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        assert e.response.status_code == 400, "Expected status code 400"
-        assert "first name" in e.response.json()["firstName"], "First name error"
+# def test_should_return_400_if_first_name_missing(sign_up_api: SignUp):
+#     user = get_random_user()
+#     user.firstName = ""  # intentionally missing first name
+#     try:
+#         response = sign_up_api.api_call(user)
+#         response.raise_for_status()
+#     except requests.exceptions.HTTPError as e:
+#         assert e.response.status_code == 400, "Expected status code 400"
+#         assert "first name" in e.response.json()["firstName"], "First name error"
 
-def test_should_return_400_if_last_name_missing(sign_up_api: SignUp):
-    user = get_random_user()
-    user.lastName = ""  # intentionally missing last name
-    try:
-        response = sign_up_api.api_call(user)
-        response.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        assert e.response.status_code == 400, "Expected status code 400"
-        assert "last name" in e.response.json()["lastName"], "Last name error"
+# def test_should_return_400_if_last_name_missing(sign_up_api: SignUp):
+#     user = get_random_user()
+#     user.lastName = ""  # intentionally missing last name
+#     try:
+#         response = sign_up_api.api_call(user)
+#         response.raise_for_status()
+#     except requests.exceptions.HTTPError as e:
+#         assert e.response.status_code == 400, "Expected status code 400"
+#         assert "last name" in e.response.json()["lastName"], "Last name error"
 
 def test_should_return_400_if_role_invalid_2(sign_up_api: SignUp):
     user = get_random_user()
@@ -107,4 +108,5 @@ def test_should_return_400_if_last_name_missing_2(sign_up_api: SignUp):
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         assert e.response.status_code == 400, "Expected status code 400"
-        assert "Minimum lastName length" in e.response.json()["lastName"], "Last name error"
+        assert "Minimum lastName length: 4 characters" in e.response.json()["lastName"], "Last name error"
+
