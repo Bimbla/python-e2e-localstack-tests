@@ -1,7 +1,7 @@
 import pytest
 import os
 from api.post_sign_up import SignUp
-from api.data.register import RegisterRequestDto  # Poprawiony import
+from api.data.register import RegisterRequestDto
 from dotenv import load_dotenv
 import requests
 
@@ -20,8 +20,8 @@ def test_successful_api_signup(sign_up_api: SignUp):
         lastName="User",
         roles=["ROLE_USER"]
     )
-    response = sign_up_api.api_call(user)
     try:
+        response = sign_up_api.api_call(user)
         response.raise_for_status()
         assert response.status_code == 200, "Expected status code 200"
         assert response.json().get('token') is not None, "Token should not be None"
@@ -38,7 +38,8 @@ def test_should_return_400_if_username_or_password_too_short(sign_up_api: SignUp
         roles=["ROLE_USER"]
     )
     try:
-        sign_up_api.api_call(user)
+        response = sign_up_api.api_call(user)
+        response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         assert e.response.status_code == 400, "Expected status code 400"
         assert "username length" in e.response.json().get("username", ""), "Username error should mention length"
@@ -54,7 +55,8 @@ def test_should_return_422_on_existing_user(sign_up_api: SignUp):
         roles=["ROLE_USER"]
     )
     try:
-        sign_up_api.api_call(user)
+        response = sign_up_api.api_call(user)
+        response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         assert e.response.status_code == 422, "Expected status code 422"
         assert "User already exists" == e.response.json().get("message"), "Expected error message for existing user"
@@ -69,7 +71,8 @@ def test_should_return_500_on_server_error(sign_up_api: SignUp):
         roles=["ROLE_USER"]
     )
     try:
-        sign_up_api.api_call(user)
+        response = sign_up_api.api_call(user)
+        response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         assert e.response.status_code == 500, "Expected status code 500"
         pytest.fail(f"Server error occurred: {str(e)}")
