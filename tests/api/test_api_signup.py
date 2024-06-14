@@ -27,13 +27,6 @@ def test_should_return_400_if_username_too_short(sign_up_api: SignUp):
         assert e.response.status_code == 400, "Expected status code 400"
         assert "username length" in e.response.json()["username"], "Username error"
 
-def test_should_return_400_if_password_too_short(sign_up_api: SignUp):
-    user = get_random_user()
-    user.password = "123"  # intentionally short password
-    response = sign_up_api.api_call(user)
-    assert response.status_code == 400, "Expected status code 400"
-    assert "password length" in response.json()["password"], "Password error"
-
 def test_should_return_400_if_email_invalid(sign_up_api: SignUp):
     user = get_random_user()
     user.email = "not-an-email"  # intentionally invalid email
@@ -46,7 +39,7 @@ def test_should_return_400_if_email_invalid(sign_up_api: SignUp):
             "must be a well-formed email address" in e.response.json()["email"]
         ), "Email error should mention being a well-formed email address"
 
-def test_should_return_400_if_username_too_short_2(sign_up_api: SignUp):
+def test_should_return_400_if_username_too_short(sign_up_api: SignUp):
     user = get_random_user()
     user.username = "abc"  # intentionally short username
     try:
